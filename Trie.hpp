@@ -8,7 +8,7 @@
 // Permitido para armazenar e retornar os resultados
 #include <vector> 
 
-int const ALPHABET_SIZE = 26;
+int const ALPHABET_SIZE = 36;
 
 class TrieNode {
 

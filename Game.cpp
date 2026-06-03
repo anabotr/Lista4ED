@@ -2,8 +2,6 @@
 #include <iostream> 
 using namespace std; 
 
-Game::~Game(){}
-
 Game::Game(){}
 
 Game::Game(std::string title, std::string shortDescription, int popularity){
@@ -23,3 +21,5 @@ string Game::getShortDescription(){
 int Game::getPopularity(){
     return this->popularity; 
 }
+
+Game::~Game(){}
