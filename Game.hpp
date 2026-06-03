@@ -1,13 +1,14 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <iostream>
 #include <string>
 
 class Game {
 
 private:
     std::string title;
-    std::string shortDescription;
+    std::string shortdescription;
     int popularity;
 
 public:

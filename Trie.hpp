@@ -26,7 +26,6 @@ public:
 class Trie {
 
 private:
-
     TrieNode* root;
 
 public:
