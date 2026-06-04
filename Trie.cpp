@@ -7,6 +7,7 @@ TrieNode::TrieNode(){
     for(int i = 0; i<36; i++){
         this->children[i] = nullptr;
     }
+
     this -> isEndOfTitle = false;
     this -> game = nullptr;
 }
@@ -31,7 +32,10 @@ string Trie::toSearchKey(std::string text){
     for(int i = 0; i<text.size(); i++){
         letra = text[i];
         ascii_letra = letra;
-        if(((ascii_letra >= 97) && (ascii_letra <= 122)) || ((ascii_letra >= 48) && (ascii_letra <= 57))){
+
+        if(((ascii_letra >= 97) && (ascii_letra <= 122)) 
+            || 
+            ((ascii_letra >= 48) && (ascii_letra <= 57))){
             letra = char(ascii_letra);
             convertido += letra; 
         } else if((ascii_letra >= 65) && (ascii_letra <= 90)){
@@ -40,93 +44,96 @@ string Trie::toSearchKey(std::string text){
             convertido += letra; 
         } 
     }
+
     return convertido;
 }
 
 bool Trie::insert(Game* game){
     string nome = game->getTitle();
     nome = this->toSearchKey(nome);
+    
     TrieNode* atual = this->root;
     TrieNode* temp = nullptr; 
     int indice;
 
-    for(int i=0; i<nome.size(); i++){
-        indice = nome[i];
-        if(atual->children[indice - 97] == nullptr){
-            temp = new TrieNode();
-            atual->children[indice-97] = temp;
+    for(int i=0; i<nome.size(); i++){ 
+        indice = nome[i]; 
+        if (indice - 97 >= 0){
+            if(atual->children[indice - 97] == nullptr){ 
+                temp = new TrieNode(); 
+                atual->children[indice-97] = temp;
+            } else {
+                temp = atual -> children[indice - 97];
+            }
         } else {
-            temp = atual -> children[indice - 97];
-        }     
-        atual = temp;   
+            if(atual->children[indice - 22] == nullptr){ 
+                temp = new TrieNode(); 
+                atual->children[indice-22] = temp;
+            } else {
+                temp = atual -> children[indice - 22];
+            }     
+        }
+        atual = temp; 
     }
+
     atual->isEndOfTitle = true;
     atual->game = game;
     return true;
 }
 
 bool Trie::contains(std::string title){
+    title = toSearchKey(title);
+
     TrieNode* atual = this->root;
     TrieNode* temp = nullptr; 
     int indice;
     
     for(int i=0; i<title.size(); i++){
         indice = title[i];
-        if(atual->children[indice - 97] == nullptr){
-            return false;
+        if (indice - 97 >= 0){
+            if(atual->children[indice - 97] == nullptr){ 
+                return false; 
+            } else {
+                temp = atual -> children[indice - 97];
+            }
         } else {
-            temp = atual -> children[indice - 97];
-        }     
-        atual = temp;   
+            if(atual->children[indice - 22] == nullptr){ 
+                return false; 
+            } else {
+                temp = atual -> children[indice - 22];
+            }
+        }
+        atual = temp;    
     }
-    if(atual->isEndOfTitle == false){
+
+    if((atual->isEndOfTitle) == false){
         return false;
     }
+
     return true;
 }
 
-bool Trie::isGreater(Game* game1, Game* game2){
-    int g1;
-    int g2;
-    string nome1 = game1->getTitle();
-    string nome2 = game2->getTitle();
-
-    for(int i = 0; i < nome1.size(); i++){
-        if(i+1 > nome2.size()){
-            return true;
-        } 
-        g1 = nome1[i];
-        g2 = nome2[i];
-        if(g1 > g2){
-            return true;
-        }
-        else if (g1 < g2){
-            return false;
-        }
-    }
-    if (nome2.size() > nome1.size()){
+bool Trie::isLower(Game* game1, Game* game2){
+    if(game1->getPopularity() < game2->getPopularity()){
+        return true;
+    } else if(game1->getPopularity() > game2->getPopularity()){
         return false;
     }
 
-    if(game1->getPopularity() > game2->getPopularity()){
-        return true; 
-    }else{
-        return false;
-    }
+    return game1->getTitle() < game2->getTitle();
 }
 
 int Trie::partition(vector<Game*>& arr, int low, int high) {
     Game* pivot = arr[low];
-
     int left = low + 1;
     int right = high;
 
     while (true) {
-        while (left <= right && isGreater(pivot, arr[left])) {
+        while ((left <= right) && (isLower(pivot, arr[left]))) {
             left++;
         }
 
-        while (left <= right && isGreater(arr[right],pivot)){
+        while ((left <= right) && (isLower(arr[right],pivot))){
             right--;
         }
 
@@ -159,11 +166,12 @@ std::vector<Game*> Trie::autocomplete(std::string prefix, int k){
     vector<Game*> aux; 
     vector<TrieNode*> proxs;
     vector<TrieNode*> proxs_aux;
-    TrieNode* atual = this->root;
-    prefix = toSearchKey(prefix); 
+    TrieNode* atual = this->root; 
     int letra;
-    int index;
     bool add = false;
+    bool flag = true;
+
+    prefix = toSearchKey(prefix); 
 
     if(k<=0){
         return aux;
@@ -171,32 +179,40 @@ std::vector<Game*> Trie::autocomplete(std::string prefix, int k){
     
     for(int i =0; i<prefix.size(); i++){
         letra = prefix[i];
-        if(atual->children[i-97] != nullptr){
-            atual = atual->children[i-97]; 
-        } else {
-            return aux; 
+        if(letra - 97 >= 0){ 
+            if(atual->children[letra-97] != nullptr){  
+                atual = atual->children[letra-97]; 
+            } 
+        } else if (letra - 97 < 0) {
+            if(atual->children[letra-22] != nullptr){  
+                atual = atual->children[letra-22]; 
+            } 
         }
     }
-
+    
     for(int j =0; j<36; j++){
         if(atual->children[j] != nullptr){
             proxs.push_back(atual->children[j]);
             add = true;
         }
     } 
-    
-    while(true){
-        if(atual->isEndOfTitle){
-            aux.push_back(atual->game);
-        }
+
+    if(atual->isEndOfTitle == true){
+        aux.push_back(atual->game);
+    }
+
+    while(flag){
 
         if(not add){
-            return aux;
+            flag = false;
         }
 
         add = false;
         
         for(int l = 0; l < proxs.size(); l++){
+            if (proxs[l]->isEndOfTitle){
+                aux.push_back(proxs[l]->game);
+            }
             for(int j =0; j<36; j++){
                 if(proxs[l]->children[j] != nullptr){
                     proxs_aux.push_back(proxs[l]->children[j]);
@@ -216,7 +232,7 @@ std::vector<Game*> Trie::autocomplete(std::string prefix, int k){
         return aux;
     }
     else{
-        vector<Game*> aux(aux.begin(), aux.begin() + k);
-        return aux;
+        vector<Game*> copia(aux.begin(), aux.begin() + k);
+        return copia;
     }
 }

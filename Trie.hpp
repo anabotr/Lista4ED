@@ -36,7 +36,7 @@ public:
 
     bool insert(Game* game);
     bool contains(string title);
-    bool isGreater(Game* game1, Game* game2); 
+    bool isLower(Game* game1, Game* game2); 
     int partition(vector<Game*>& arr, int low, int high);
     void quickSort(vector<Game*>& arr, int low, int high); 
 

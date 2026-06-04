@@ -19,6 +19,12 @@ O programa deve ser executado no seguinte formato:
 ./app k prefixo
 ```
 
+Caso a busca seja realizada com mais de uma palavra, o conteúdo deve ser colocado entre aspas: 
+
+```bash
+./app k "duas palavras"
+```
+
 Onde:
 
 * `k` é a quantidade máxima de sugestões desejadas;
@@ -35,4 +41,27 @@ Onde:
 * **GamesDatabase.cpp**: definição da lista inicial de jogos. 
 
 ## Exemplos de uso 
+
+Considerando o modo de execução mostrado acima, aqui estão alguns exemplos para verificar o funcionamento do código! 
+
+Os diferentes comandos a seguir devem ter o mesmo resultado. 
+
+```bash
+./app 3 "halo i"
+```
+
+```bash
+./app 3 HALOI
+```
+
+```bash
+./app 3 haloi
+```
+
+Resultado esperado: 
+
+```bash
+[Halo Infinite | The legendary Halo series returns with the most expansive Master Chief campaign yet and a ground breaking free to play multiplayer experience | 160647
+```
+
 

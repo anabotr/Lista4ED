@@ -7,26 +7,35 @@ using namespace std;
 
 int main(int argc, char* argv[]){ 
     if (argc < 2) {
-        std::cout << "Usage: ./app k prefix" << std::endl;
+        cout << "Usage: ./app k prefix" << std::endl;
         return 1;
     }
 
-    Trie* arvre = new Trie(); 
-    Game* p = &games[0];
-    cout << p->getTitle() << endl; 
-    
-    for(int i =0; i<numberOfGames; i++){
-        arvre->insert(&games[i]);
+    int k = atoi(argv[1]);
+    k = max(k, 0);
+    k = min(k, numberOfGames);
+
+    Game* aux;
+    Trie arvre; 
+
+    for(int n = 0; n < numberOfGames; n++){
+        arvre.insert(&games[n]); 
     }
 
-    int k = std::atoi(argv[1]);
     string prefix = argv[2]; 
-    prefix = arvre->toSearchKey(prefix);
 
-    bool a = arvre->contains(prefix); 
-    cout << a << endl; 
+    vector<Game*> gamesk = arvre.autocomplete(prefix, k); 
 
-    // cout << "Titulo" << " | " << "Descricao" << " | " << "Populariedade" << cout; 
+    int m = min(k, int(gamesk.size()));
+
+    if(int(gamesk.size()) == 0){
+        cout << "No results found" << endl;
+        return 0; 
+    } else {
+        for(int j =0; j<m; j++){  
+            cout << "[" << gamesk[j]->getTitle() << " | " << gamesk[j]->getShortDescription() << " | " << gamesk[j]->getPopularity() << endl;
+        }
+    }
 
     return 0; 
 } 
