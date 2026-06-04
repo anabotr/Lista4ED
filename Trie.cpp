@@ -13,7 +13,7 @@ TrieNode::TrieNode(){
 
 TrieNode::~TrieNode(){
     // apagar? são só 36. 
-    delete[] this -> children;
+    //delete[] this -> children;
 }
 
 Trie::Trie(){
@@ -85,10 +85,138 @@ bool Trie::contains(std::string title){
     return true;
 }
 
-std::vector<Game*> Trie::autocomplete(std::string prefix, int k){
+bool Trie::isGreater(Game* game1, Game* game2){
+    int g1;
+    int g2;
+    string nome1 = game1->getTitle();
+    string nome2 = game2->getTitle();
 
+    for(int i = 0; i < nome1.size(); i++){
+        if(i+1 > nome2.size()){
+            return true;
+        } 
+        g1 = nome1[i];
+        g2 = nome2[i];
+        if(g1 > g2){
+            return true;
+        }
+        else if (g1 < g2){
+            return false;
+        }
+    }
+    if (nome2.size() > nome1.size()){
+        return false;
+    }
+
+    if(game1->getPopularity() > game2->getPopularity()){
+        return true; 
+    }else{
+        return false;
+    }
+}
+
+int Trie::partition(vector<Game*>& arr, int low, int high) {
+    Game* pivot = arr[low];
+
+    int left = low + 1;
+    int right = high;
+
+    while (true) {
+        while (left <= right && isGreater(pivot, arr[left])) {
+            left++;
+        }
+
+        while (left <= right && isGreater(arr[right],pivot)){
+            right--;
+        }
+
+        if (left > right) {
+            break;
+        }
+
+        std::swap(arr[left], arr[right]);
+    }
+
+    std::swap(arr[low], arr[right]);
+
+    return right;
+}
+
+void Trie::quickSort(vector<Game*>& arr, int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
 }
 
 void Trie::sortResults(std::vector<Game*>& games){
+    quickSort(games, 0, games.size()-1);
+}
 
+std::vector<Game*> Trie::autocomplete(std::string prefix, int k){
+    vector<Game*> aux; 
+    vector<TrieNode*> proxs;
+    vector<TrieNode*> proxs_aux;
+    TrieNode* atual = this->root;
+    prefix = toSearchKey(prefix); 
+    int letra;
+    int index;
+    bool add = false;
+
+    if(k<=0){
+        return aux;
+    }
+    
+    for(int i =0; i<prefix.size(); i++){
+        letra = prefix[i];
+        if(atual->children[i-97] != nullptr){
+            atual = atual->children[i-97]; 
+        } else {
+            return aux; 
+        }
+    }
+
+    for(int j =0; j<36; j++){
+        if(atual->children[j] != nullptr){
+            proxs.push_back(atual->children[j]);
+            add = true;
+        }
+    } 
+    
+    while(true){
+        if(atual->isEndOfTitle){
+            aux.push_back(atual->game);
+        }
+
+        if(not add){
+            return aux;
+        }
+
+        add = false;
+        
+        for(int l = 0; l < proxs.size(); l++){
+            for(int j =0; j<36; j++){
+                if(proxs[l]->children[j] != nullptr){
+                    proxs_aux.push_back(proxs[l]->children[j]);
+                    add = true;
+                }
+            } 
+        }
+
+        proxs.clear();
+        proxs = proxs_aux;
+        proxs_aux.clear(); 
+    } 
+
+    sortResults(aux);
+    
+    if (aux.size() <= k){
+        return aux;
+    }
+    else{
+        vector<Game*> aux(aux.begin(), aux.begin() + k);
+        return aux;
+    }
 }

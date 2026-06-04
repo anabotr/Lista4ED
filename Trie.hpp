@@ -7,6 +7,7 @@
 #include <string>
 // Permitido para armazenar e retornar os resultados
 #include <vector> 
+using namespace std; 
 
 int const ALPHABET_SIZE = 36;
 
@@ -34,13 +35,16 @@ public:
     ~Trie();
 
     bool insert(Game* game);
-    bool contains(std::string title);
+    bool contains(string title);
+    bool isGreater(Game* game1, Game* game2); 
+    int partition(vector<Game*>& arr, int low, int high);
+    void quickSort(vector<Game*>& arr, int low, int high); 
 
-    std::vector<Game*> autocomplete(std::string prefix, int k);
+    vector<Game*> autocomplete(std::string prefix, int k);
 
-    std::string toSearchKey(std::string text);
-    void sortResults(std::vector<Game*>& games);
-
+    string toSearchKey(string text);
+    void sortResults(vector<Game*>& games);
+    
     // Outros métodos auxiliares, se necessário
 };
 
