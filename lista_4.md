@@ -676,28 +676,6 @@ Titulo | Descricao | Popularidade
 * Não é necessário implementar menu interativo.
 * O programa deve ser executado no formato:
 
-```bash
-./app k prefixo
-```
-
-* Caso a quantidade de argumentos esteja incorreta, o programa deve exibir:
-
-```text
-Usage: ./app k prefix
-```
-
-* Caso nenhum jogo seja encontrado, o programa deve exibir:
-
-```text
-No results found
-```
-
-* A saída dos jogos encontrados deve seguir o formato:
-
-```text
-Titulo | Descricao | Popularidade
-```
-
 ## Orientações para o relatório
 
 O relatório deve ter aproximadamente 2 páginas e deve focar nas decisões de implementação, no funcionamento geral dos métodos, na análise de custo computacional e na comparação com uma solução ingênua.

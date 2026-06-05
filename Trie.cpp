@@ -13,8 +13,9 @@ TrieNode::TrieNode(){
 }
 
 TrieNode::~TrieNode(){
-    // apagar? são só 36. 
-    //delete[] this -> children;
+    for(int i =0; i<36; i++){
+        delete children[i]; 
+    }
 }
 
 Trie::Trie(){

@@ -64,4 +64,19 @@ Resultado esperado:
 [Halo Infinite | The legendary Halo series returns with the most expansive Master Chief campaign yet and a ground breaking free to play multiplayer experience | 160647
 ```
 
+Exemplos de uso do contains:
+
+```cpp
+contains("Hades");       // true
+contains("hades");       // true
+contains("HADES");       // true
+contains("Half Life");   // false
+contains("halflife");    // false
+contains("HALF LIFE");   // false
+contains("Minecraft");   // false
+```
+
+
+
+
 
