@@ -6,10 +6,13 @@
 using namespace std; 
 
 int main(int argc, char* argv[]){ 
-    if (argc < 2) {
+    if (argc <= 2) {
         cout << "Usage: ./app k prefix" << std::endl;
         return 1;
-    }
+    } else if (argc > 3) {
+        cout << "Prefixo informado deve estar entre aspas" << std::endl;
+        return 1;
+    }   
 
     int k = atoi(argv[1]);
     k = max(k, 0);
@@ -33,7 +36,7 @@ int main(int argc, char* argv[]){
         return 0; 
     } else {
         for(int j =0; j<m; j++){  
-            cout << "[" << gamesk[j]->getTitle() << " | " << gamesk[j]->getShortDescription() << " | " << gamesk[j]->getPopularity() << endl;
+            cout << gamesk[j]->getTitle() << " | " << gamesk[j]->getShortDescription() << " | " << gamesk[j]->getPopularity() << endl;
         }
     }
 

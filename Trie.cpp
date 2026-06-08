@@ -121,7 +121,7 @@ bool Trie::isLower(Game* game1, Game* game2){
         return false;
     }
 
-    return game1->getTitle() < game2->getTitle();
+    return game1->getTitle() > game2->getTitle();
 }
 
 int Trie::partition(vector<Game*>& arr, int low, int high) {
